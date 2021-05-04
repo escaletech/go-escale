@@ -14,7 +14,7 @@ func (v *Validator) StringRequired(key string) string {
 	return val
 }
 
-func (v *Validator) stringOrDefault(key, def string) string {
+func (v *Validator) StringOrDefault(key, def string) string {
 	val := os.Getenv(key)
 	if val == "" {
 		return def
@@ -23,7 +23,7 @@ func (v *Validator) stringOrDefault(key, def string) string {
 	return val
 }
 
-func (v *Validator) boolOrDefault(key, def string) bool {
+func (v *Validator) BoolOrDefault(key, def string) bool {
 	var ret bool
 	val := os.Getenv(key)
 	if val == "" {
@@ -35,7 +35,7 @@ func (v *Validator) boolOrDefault(key, def string) bool {
 	return ret
 }
 
-func (v *Validator) intOrDefault(key string, def int) int {
+func (v *Validator) IntOrDefault(key string, def int) int {
 	val := os.Getenv(key)
 	if val == "" {
 		return def
