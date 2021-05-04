@@ -8,7 +8,7 @@ import (
 func (v *Validator) StringRequired(key string) string {
 	val := os.Getenv(key)
 	if val == "" {
-		v.errs = append(v.errs, "missing "+key)
+		v.Errs = append(v.Errs, "missing "+key)
 	}
 
 	return val
@@ -43,7 +43,7 @@ func (v *Validator) IntOrDefault(key string, def int) int {
 
 	num, err := strconv.Atoi(val)
 	if err != nil {
-		v.errs = append(v.errs, "unable to convert "+key+" to int")
+		v.Errs = append(v.Errs, "unable to convert "+key+" to int")
 	}
 
 	return num
