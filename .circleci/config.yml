@@ -3,11 +3,6 @@ version: 2.1
 orbs:
   sq: escaletech/sonarqube@0.2
 
-executors:
-  eks-orb-legacy:
-    docker:
-      - image: escaletech/circleci-eks:0.4.2
-
 jobs:
   build-and-test:
     docker:
