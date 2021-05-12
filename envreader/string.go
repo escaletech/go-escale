@@ -1,4 +1,4 @@
-package readenv
+package envreader
 
 import "github.com/escaletech/go-escale/messages"
 
