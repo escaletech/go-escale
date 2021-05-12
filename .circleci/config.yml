@@ -1,0 +1,40 @@
+version: 2.1
+
+orbs:
+  sq: escaletech/sonarqube@0.2
+
+executors:
+  eks-orb-legacy:
+    docker:
+      - image: escaletech/circleci-eks:0.4.2
+
+jobs:
+  build-and-test:
+    docker:
+      - image: cimg/go:1.14
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - go-mod-v2-{{ checksum "go.sum" }}
+            - go-mod-v2-
+      - run:
+          name: Check if go.mod is clean
+          command: go mod tidy && git diff --quiet
+      - run: make test-coverage
+
+ci_only: &ci_only
+  filters:
+    branches: { ignore: [main] }
+    tags: { ignore: /.*/ }
+
+workflows:
+  version: 2
+  ci:
+    jobs:
+      - build-and-test:
+          <<: *ci_only
+      - sq/scanner:
+          context: sonarqube
+          requires: [build-and-test]
+          <<: *ci_only
