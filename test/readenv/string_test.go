@@ -34,7 +34,7 @@ func TestString(t *testing.T) {
 				r := newEnvReader()
 
 				response := r.StringRequired(fakeEnvVarName)
-				
+
 				assert.Equal(t, fakeEnvVarValue, response)
 				assert.Equal(t, 0, len(r.Errs) )
 			})
@@ -48,6 +48,30 @@ func TestString(t *testing.T) {
 
 				assert.Equal(t, "", response)
 				assert.Equal(t, messages.MissingRequiredEnv("invalidEnvVarName"), r.Errs[0])
+			})
+		})
+	})
+
+	t.Run("StringOrDefault", func(t *testing.T) { 
+		t.Run("Env has the required value", func(t *testing.T) {
+			t.Run("It should return the variable value and error's slice should be empty", func(t *testing.T) {
+				r := newEnvReader()
+
+				response := r.StringOrDefault(fakeEnvVarName, "defaultValue")
+
+				assert.Equal(t, fakeEnvVarValue, response)
+				assert.Equal(t, 0, len(r.Errs) )
+			})
+		})
+
+		t.Run("Env doesn't have the required value", func(t *testing.T) {
+			t.Run("It should return a default value and error's slice should be empty", func(t *testing.T) {
+				r := newEnvReader()
+
+				response := r.StringOrDefault("invalidEnvVarName", "defaultValue")
+
+				assert.Equal(t, "defaultValue", response)
+				assert.Equal(t, 0, len(r.Errs))
 			})
 		})
 	})
