@@ -1,4 +1,4 @@
-# readEnv
+# envreader
 
 Funções para validação de variáveis de ambiente.
 

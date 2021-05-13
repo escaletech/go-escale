@@ -1,6 +1,6 @@
 # Go Escale
 
-Módulos helpers para uso em projetos em Go da Escale.
+Biblioteca padrão para projetos Golang da Escale.
 
 ## Como usar
 ```
@@ -8,4 +8,4 @@ go get github.com/escaletech/go-escale
 ```
 
 ## Funcionalidades
-[readEnv](./docs/readEnv.md)
+[envreader](./docs/envreader.md)
