@@ -16,9 +16,9 @@ func TestString(t *testing.T) {
 			t.Run("It should return the variable value and error's slice should be empty", func(t *testing.T) {
 				r := envreader.NewEnvReader(testUtils.GetFakeEnv)
 
-				response := r.StringRequired(testUtils.FakeEnvVarName)
+				response := r.StringRequired(testUtils.FakeEnvVarNameString)
 
-				assert.Equal(t, testUtils.FakeEnvVarValue, response)
+				assert.Equal(t, testUtils.FakeEnvVarValueString, response)
 				assert.Equal(t, false, r.HasErrors())
 			})
 		})
@@ -40,9 +40,9 @@ func TestString(t *testing.T) {
 			t.Run("It should return the variable value and error's slice should be empty", func(t *testing.T) {
 				r := envreader.NewEnvReader(testUtils.GetFakeEnv)
 
-				response := r.StringOrDefault(testUtils.FakeEnvVarName, "defaultValue")
+				response := r.StringOrDefault(testUtils.FakeEnvVarNameString, "defaultValue")
 
-				assert.Equal(t, testUtils.FakeEnvVarValue, response)
+				assert.Equal(t, testUtils.FakeEnvVarValueString, response)
 				assert.Equal(t, false, r.HasErrors())
 			})
 		})

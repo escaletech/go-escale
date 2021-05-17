@@ -1,12 +1,17 @@
 package test_utils
 
-var FakeEnvVarName = "fakeEnv"
-var FakeEnvVarValue = "fakeEnvValue"
+var FakeEnvVarNameString = "fakeEnvString"
+var FakeEnvVarValueString = "fakeEnvValue"
+var FakeEnvVarNameBool = "fakeEnvBool"
+var FakeEnvVarValueBool = "true"
 
 func GetFakeEnv(key string) string {
-	if key == FakeEnvVarName {
-		return FakeEnvVarValue
+	switch {
+		case key == FakeEnvVarNameString:
+			return FakeEnvVarValueString
+		case key == FakeEnvVarNameBool :
+			return FakeEnvVarValueBool
+		default:
+			return "";
 	}
-
-	return ""
 }
