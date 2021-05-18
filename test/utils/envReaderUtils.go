@@ -12,6 +12,6 @@ func GetFakeEnv(key string) string {
 		case key == FakeEnvVarNameBool :
 			return FakeEnvVarValueBool
 		default:
-			return "";
+			return ""
 	}
 }
