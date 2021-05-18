@@ -9,7 +9,7 @@ func GetFakeEnv(key string) string {
 	switch {
 		case key == FakeEnvVarNameString:
 			return FakeEnvVarValueString
-		case key == FakeEnvVarNameBool :
+		case key == FakeEnvVarNameBool:
 			return FakeEnvVarValueBool
 		default:
 			return ""
