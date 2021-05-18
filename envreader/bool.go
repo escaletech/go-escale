@@ -2,15 +2,19 @@ package envreader
 
 import (
 	"strconv"
+
+	"github.com/escaletech/go-escale/messages"
 )
 
 func (r *EnvReader) BoolOrDefault(key string, def bool) bool {
-	var ret bool
 	val := r.Env(key)
 	if val == "" {
 		return def
 	}
 	
-	ret, _ = strconv.ParseBool(val)
+	ret, err := strconv.ParseBool(val)
+	if err != nil {
+		r.Errs = append(r.Errs, messages.UnableToConvertToBool(key))
+	}
 	return ret
 }
