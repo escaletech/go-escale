@@ -7,3 +7,7 @@ var MissingRequiredEnv = func(key string) string {
 var UnableToConvertToBool = func(key string) string {
 	return "unable to convert "+key+" to bool"
 }
+
+var UnableToConvertToInt = func(key string) string {
+	return "unable to convert "+key+" to int"
+}
