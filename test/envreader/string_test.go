@@ -5,32 +5,36 @@ import (
 
 	"github.com/escaletech/go-escale/envreader"
 	"github.com/escaletech/go-escale/messages"
-	testUtils "github.com/escaletech/go-escale/test/utils"
+	"github.com/escaletech/go-escale/test/testutils"
 
 	"github.com/stretchr/testify/assert"
 )
+
+func init() {
+	envreader.Env = testutils.GetFakeEnv
+}
 
 func TestString(t *testing.T) {
 	t.Run("StringRequired", func(t *testing.T) {
 		t.Run("Env has the required value", func(t *testing.T) {
 			t.Run("It should return the variable value and error's slice should be empty", func(t *testing.T) {
-				r := envreader.NewEnvReader(testUtils.GetFakeEnv)
+				er := envreader.New()
 
-				response := r.StringRequired(testUtils.FakeEnvVarNameString)
+				response := er.StringRequired(testutils.FakeEnvVarNameString)
 
-				assert.Equal(t, testUtils.FakeEnvVarValueString, response)
-				assert.Equal(t, false, r.HasErrors())
+				assert.Equal(t, testutils.FakeEnvVarValueString, response)
+				assert.Equal(t, false, er.HasErrors())
 			})
 		})
 
 		t.Run("Env doesn't have the required value", func(t *testing.T) {
 			t.Run("It should return an empty string and add an error message to the slice", func(t *testing.T) {
-				r := envreader.NewEnvReader(testUtils.GetFakeEnv)
+				er := envreader.New()
 
-				response := r.StringRequired("invalidEnvVarName")
+				response := er.StringRequired("invalidEnvVarName")
 
 				assert.Equal(t, "", response)
-				assert.Equal(t, messages.MissingRequiredEnv("invalidEnvVarName"), r.Errs[0])
+				assert.Equal(t, messages.MissingRequiredEnv("invalidEnvVarName"), er.Errs[0])
 			})
 		})
 	})
@@ -38,23 +42,23 @@ func TestString(t *testing.T) {
 	t.Run("StringOrDefault", func(t *testing.T) {
 		t.Run("Env has the required value", func(t *testing.T) {
 			t.Run("It should return the variable value and error's slice should be empty", func(t *testing.T) {
-				r := envreader.NewEnvReader(testUtils.GetFakeEnv)
+				er := envreader.New()
 
-				response := r.StringOrDefault(testUtils.FakeEnvVarNameString, "defaultValue")
+				response := er.StringOrDefault(testutils.FakeEnvVarNameString, "defaultValue")
 
-				assert.Equal(t, testUtils.FakeEnvVarValueString, response)
-				assert.Equal(t, false, r.HasErrors())
+				assert.Equal(t, testutils.FakeEnvVarValueString, response)
+				assert.Equal(t, false, er.HasErrors())
 			})
 		})
 
 		t.Run("Env doesn't have the required value", func(t *testing.T) {
 			t.Run("It should return a default value and error's slice should be empty", func(t *testing.T) {
-				r := envreader.NewEnvReader(testUtils.GetFakeEnv)
+				er := envreader.New()
 
-				response := r.StringOrDefault("invalidEnvVarName", "defaultValue")
+				response := er.StringOrDefault("invalidEnvVarName", "defaultValue")
 
 				assert.Equal(t, "defaultValue", response)
-				assert.Equal(t, false, r.HasErrors())
+				assert.Equal(t, false, er.HasErrors())
 			})
 		})
 	})
