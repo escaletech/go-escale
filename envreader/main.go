@@ -1,21 +1,26 @@
 package envreader
 
-import "strings"
+import (
+	"os"
+	"strings"
+)
+
+var Env func(key string) string
+
+func init() {
+	Env = os.Getenv
+}
 
 // Create a new envReader
-func NewEnvReader(env func(key string) string) *EnvReader {
+func New() *EnvReader {
 	return &EnvReader{
-		Env: env,
+		Env: Env,
 	}
 }
 
-// Check if envReader Errs slice is not empty
+// Check if envReader has errors
 func (r *EnvReader) HasErrors() bool {
-	if len(r.Errs) > 0 {
-		return true
-	}
-
-	return false
+	return len(r.Errs) > 0
 }
 
 // Returns envReader Errs slice items as a string
