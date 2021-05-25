@@ -26,3 +26,7 @@ func set(r *http.Request) *http.Request {
 
 	return r.WithContext(context.WithValue(r.Context(), requestIDKey{}, current))
 }
+
+func Get(r *http.Request) string {
+	return r.Context().Value(requestIDKey{}).(string)
+}
