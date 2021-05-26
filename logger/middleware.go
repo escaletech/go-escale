@@ -17,11 +17,6 @@ func Middleware(env string) mux.MiddlewareFunc {
 	}
 }
 
-type middleware struct {
-	next   http.Handler
-	logger *logrus.Logger
-}
-
 func (h *middleware) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	rid := requestid.Get(r)
 	log := h.logger.WithField("request_id", rid)
@@ -59,14 +54,6 @@ func (h *middleware) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	log.WithFields(fields).Info(message)
-}
-
-// loggerReponseWriter - wrapper to ResponseWriter
-type loggerReponseWriter struct {
-	http.Flusher
-	http.ResponseWriter
-	http.CloseNotifier
-	status int
 }
 
 func newLoggerReponseWriter(w http.ResponseWriter) *loggerReponseWriter {
