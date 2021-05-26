@@ -19,7 +19,7 @@ func New() *HTTPClient {
 	}
 }
 
-// Make an HTTP request using default http.Client.Do function
+// Make a HTTP request using default http.Client.Do function
 func (h *HTTPClient) DoRequest(params Request) (*http.Response, error) {
 	req, err := http.NewRequest(params.Method, params.URL, params.Body)
 	if err != nil {
