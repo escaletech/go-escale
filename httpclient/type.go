@@ -2,7 +2,12 @@ package httpclient
 
 import (
 	"io"
+	"net/http"
 )
+
+type HTTPClient struct {
+	Client *http.Client
+}
 
 type Config struct {
 	TimeoutInSeconds   int
