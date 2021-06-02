@@ -18,3 +18,5 @@ go get github.com/escaletech/go-escale
 [logger](./docs/logger.md)
 
 [requestid](./docs/requestid.md)
+
+[mysqldb](./docs/mysqldb.md)
