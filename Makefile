@@ -1,7 +1,7 @@
-TEST=./test/**/*_test.go
+TEST=./test/**
 GOCMD=$(if $(shell which richgo),richgo,go)
 
-test:
+test-unit:
 	$(GOCMD) test $(TEST)
 
 test-coverage:
