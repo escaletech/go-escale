@@ -6,7 +6,7 @@ orbs:
 jobs:
   build-and-test:
     docker:
-      - image: cimg/go:1.14
+      - image: cimg/go:1.16
     steps:
       - checkout
       - restore_cache:
