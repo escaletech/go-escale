@@ -20,3 +20,5 @@ go get github.com/escaletech/go-escale
 [requestid](./docs/requestid.md)
 
 [mysqldb](./docs/mysqldb.md)
+
+[slicer](./docs/slicer.md)
