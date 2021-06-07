@@ -2,6 +2,7 @@ version: 2.1
 
 orbs:
   sq: escaletech/sonarqube@0.2
+  gh-release: escaletech/gh-conventional-release@0.1.9
 
 jobs:
   build-and-test:
@@ -18,6 +19,11 @@ jobs:
           command: go mod tidy && git diff --quiet
       - run: make test-coverage
 
+production_only: &production_only
+  filters:
+    branches: { ignore: /.*/ }
+    tags: { only: /^v.*/ }
+
 ci_only: &ci_only
   filters:
     branches: { ignore: [main] }
@@ -33,3 +39,11 @@ workflows:
           context: sonarqube
           requires: [build-and-test]
           <<: *ci_only
+  production:
+    jobs:
+      - build-and-test:
+          <<: *production_only
+      - gh-release/create-release:
+          context: github-create-release
+          requires: [build-and-test]
+          <<: *production_only
