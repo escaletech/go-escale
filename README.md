@@ -15,14 +15,16 @@ go get github.com/escaletech/go-escale
 
 [httpclient](./docs/httpclient.md)
 
+[httpserver](./docs/httpserver.md)
+
 [logger](./docs/logger.md)
 
-[requestid](./docs/requestid.md)
+[mongodb](./docs/mongodb.md)
 
 [mysqldb](./docs/mysqldb.md)
 
-[slicer](./docs/slicer.md)
+[requestid](./docs/requestid.md)
 
 [redis](./docs/redis.md)
 
-[mongodb](./docs/mongodb.md)
+[slicer](./docs/slicer.md)
