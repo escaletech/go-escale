@@ -11,7 +11,7 @@ import (
 // Connect to a MySQL instance using Gorm
 func GormConnect(params GormConnParams) *gorm.DB {
 	db, err := gorm.Open(mysql.New(mysql.Config{
-		DSN:               params.ConnectionParams.DSN,
+		DSN:               setDSN(params.ConnectionParams.DSN, params.ConnectionParams.ParseTime),
 		DefaultStringSize: params.ConnectionParams.DefaultStringSize,
 	}), &gorm.Config{
 		Logger: *logger.NewGormLogger(params.Log, params.GormLoggerConfig),
@@ -27,4 +27,12 @@ func GormConnect(params GormConnParams) *gorm.DB {
 	sqlDB.SetMaxIdleConns(params.ConnectionParams.MaxIdleConns)
 
 	return db
+}
+
+func setDSN(dsn string, parseTime bool) string {
+	if parseTime {
+		dsn += "?parseTime=true"
+	}
+
+	return dsn
 }

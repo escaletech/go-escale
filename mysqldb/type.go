@@ -14,6 +14,7 @@ type ConnectionParams struct {
 	ConnMaxLifetime   time.Duration
 	MaxOpenConns      int
 	MaxIdleConns      int
+	ParseTime         bool
 }
 
 type GormConnParams struct {
