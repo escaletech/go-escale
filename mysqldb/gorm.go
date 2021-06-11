@@ -1,6 +1,8 @@
 package mysqldb
 
 import (
+	"errors"
+
 	"github.com/escaletech/go-escale/messages"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -35,4 +37,9 @@ func setDSN(dsn string, parseTime bool) string {
 	}
 
 	return dsn
+}
+
+// Check if returned error is a "Record not found" error
+func IsRecordNotFoundError(err error) bool {
+	return errors.Is(err, gorm.ErrRecordNotFound)
 }
