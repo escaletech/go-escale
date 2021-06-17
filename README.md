@@ -11,6 +11,8 @@ go get github.com/escaletech/go-escale
 ```
 
 ## Funcionalidades
+[cerror](./docs/cerror.md)
+
 [envreader](./docs/envreader.md)
 
 [httpclient](./docs/httpclient.md)
