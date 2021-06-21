@@ -25,6 +25,7 @@ jobs:
     docker:
       - image: cimg/go:1.16
     steps:
+      - checkout
       - attach_workspace:
           at: .
       - sq/scanner
