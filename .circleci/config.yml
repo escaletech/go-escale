@@ -28,8 +28,6 @@ jobs:
       - checkout
       - attach_workspace:
           at: .
-      - run:
-          command: ls coverage
       - sq/scanner
 
 production_only: &production_only
