@@ -18,6 +18,9 @@ jobs:
           name: Check if go.mod is clean
           command: go mod tidy && git diff --quiet
       - run: make test-coverage
+      - persist_to_workspace:
+          root: .
+          paths: [.coverage]
   sonar:
     docker:
       - image: cimg/go:1.16
