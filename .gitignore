@@ -1,4 +1,3 @@
 .vscode
-report.json
-coverage.out
+.coverage/
 .DS_Store
