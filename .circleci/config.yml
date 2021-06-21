@@ -24,7 +24,7 @@ jobs:
     steps:
       - attach_workspace:
           at: .
-      - sonarqube/scanner
+      - sq/scanner
 
 production_only: &production_only
   filters:
