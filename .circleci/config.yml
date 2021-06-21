@@ -19,7 +19,8 @@ jobs:
           command: go mod tidy && git diff --quiet
       - run: make test-coverage
   sonar:
-    executor: go
+    docker:
+      - image: cimg/go:1.16
     steps:
       - checkout
       - attach_workspace:
