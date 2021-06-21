@@ -20,7 +20,7 @@ jobs:
       - run: make test-coverage
       - persist_to_workspace:
           root: .
-          paths: [.coverage]
+          paths: [coverage]
   sonar:
     docker:
       - image: cimg/go:1.16
