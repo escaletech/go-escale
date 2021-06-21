@@ -18,6 +18,17 @@ jobs:
           name: Check if go.mod is clean
           command: go mod tidy && git diff --quiet
       - run: make test-coverage
+      - persist_to_workspace:
+          root: .
+          paths: [coverage]
+  sonar:
+    docker:
+      - image: cimg/go:1.16
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - sq/scanner
 
 production_only: &production_only
   filters:
@@ -35,7 +46,7 @@ workflows:
     jobs:
       - build-and-test:
           <<: *ci_only
-      - sq/scanner:
+      - sonar:
           context: sonarqube
           requires: [build-and-test]
           <<: *ci_only
