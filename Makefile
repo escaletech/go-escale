@@ -1,4 +1,4 @@
-TEST=./test/**
+TEST ?= ./...
 GOCMD=$(if $(shell which richgo),richgo,go)
 
 test-unit:
