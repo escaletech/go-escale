@@ -2,8 +2,12 @@ package httpclient
 
 import (
 	"crypto/tls"
+	"errors"
 	"net/http"
 	"time"
+
+	"github.com/escaletech/go-escale/messages"
+	"github.com/escaletech/go-escale/slicer"
 )
 
 var Client *http.Client
@@ -21,6 +25,10 @@ func New() *HTTPClient {
 
 // Make a HTTP request using default http.Client.Do function
 func (h *HTTPClient) DoRequest(params Request) (*http.Response, error) {
+	if err := validate(params); err != nil {
+		return nil, err
+	}
+
 	req, err := http.NewRequest(params.Method, params.URL, params.Body)
 	if err != nil {
 		return nil, err
@@ -49,4 +57,21 @@ func (h *HTTPClient) setHeaders(req *http.Request, headers map[string]string) *h
 	}
 
 	return req
+}
+
+func validate(params Request) error {
+	var errMessage string
+
+	allowedMethods := []string{"GET", "POST", "PATCH", "PUT", "DELETE"}
+	methodAllowed, _ := slicer.Includes(params.Method, allowedMethods)
+
+	if !*methodAllowed {
+		errMessage = messages.RequestMethodNotAllowed
+	}
+
+	if params.URL == "" {
+		errMessage = messages.MissingRequestURL
+	}
+
+	return errors.New(errMessage)
 }
