@@ -4,6 +4,7 @@ import (
 	"crypto/tls"
 	"errors"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/escaletech/go-escale/messages"
@@ -63,7 +64,7 @@ func validate(params Request) error {
 	var errMessage string
 
 	allowedMethods := []string{"GET", "POST", "PATCH", "PUT", "DELETE"}
-	methodAllowed, _ := slicer.Includes(params.Method, allowedMethods)
+	methodAllowed, _ := slicer.Includes(strings.ToUpper(params.Method), allowedMethods)
 
 	if !*methodAllowed {
 		errMessage = messages.RequestMethodNotAllowed
@@ -73,5 +74,9 @@ func validate(params Request) error {
 		errMessage = messages.MissingRequestURL
 	}
 
-	return errors.New(errMessage)
+	if errMessage != "" {
+		return errors.New(errMessage)
+	}
+
+	return nil
 }
