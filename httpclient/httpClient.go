@@ -54,7 +54,7 @@ func (h *HTTPClient) configClient(requestConfig Config) {
 
 func (h *HTTPClient) setHeaders(req *http.Request, headers map[string]string) *http.Request {
 	for key, value := range headers {
-		req.Header.Add(key, value)
+		req.Header[key] = []string{value}
 	}
 
 	return req
