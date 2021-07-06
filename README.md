@@ -15,6 +15,8 @@ go get github.com/escaletech/go-escale
 
 [envreader](./docs/envreader.md)
 
+[hasher](./docs/hasher.md)
+
 [httpclient](./docs/httpclient.md)
 
 [httpserver](./docs/httpserver.md)
