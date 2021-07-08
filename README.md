@@ -11,6 +11,8 @@ go get github.com/escaletech/go-escale
 ```
 
 ## Funcionalidades
+[aws](./docs/aws.md)
+
 [cerror](./docs/cerror.md)
 
 [envreader](./docs/envreader.md)
@@ -32,3 +34,5 @@ go get github.com/escaletech/go-escale
 [redis](./docs/redis.md)
 
 [slicer](./docs/slicer.md)
+
+[sqs](./docs/sqs.md)
