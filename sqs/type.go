@@ -6,7 +6,7 @@ import (
 )
 
 type QueueInterface interface {
-	SendMessage(body string) error
+	SendMessage(body string, messageGroupId *string) error
 	GetMessages() (*awsSQS.ReceiveMessageOutput, error)
 	DeleteMessage(handle *string) error
 }

@@ -39,11 +39,15 @@ func (s Client) GetMessages() (*sqs.ReceiveMessageOutput, error) {
 }
 
 // Send message to SQS
-func (s Client) SendMessage(body string) error {
+func (s Client) SendMessage(body string, messageGroupId *string) error {
 	sendParams := &sqs.SendMessageInput{
 		MessageBody:  aws.String(body),
 		QueueUrl:     s.URL,
 		DelaySeconds: aws.Int64(s.Config.MessageVisibilityDelay),
+	}
+
+	if messageGroupId != nil {
+		sendParams.MessageGroupId = messageGroupId
 	}
 
 	if _, err := s.Queue.SendMessage(sendParams); err != nil {
