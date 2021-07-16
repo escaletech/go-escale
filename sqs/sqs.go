@@ -10,12 +10,8 @@ import (
 	"github.com/pkg/errors"
 )
 
-// Create SQS Client Service
-func New(queueName string, sqc sqsiface.SQSAPI, config Config) (*Client, error) {
-	if err := validate(config); err != nil {
-		return nil, err
-	}
-
+// Create SQS Client
+func New(queueName string, isFIFO bool, sqc sqsiface.SQSAPI) (*Client, error) {
 	urlResult, err := sqc.GetQueueUrl(&sqs.GetQueueUrlInput{
 		QueueName: aws.String(queueName),
 	})
@@ -24,33 +20,40 @@ func New(queueName string, sqc sqsiface.SQSAPI, config Config) (*Client, error) 
 	}
 
 	queueURL := urlResult.QueueUrl
-	return &Client{sqc, queueURL, config}, nil
+	return &Client{sqc, queueURL, isFIFO}, nil
 }
 
 // Retrieve messages from SQS
-func (s Client) GetMessages() (*sqs.ReceiveMessageOutput, error) {
+func (s Client) GetMessages(input ReceiveMessageInput) (*sqs.ReceiveMessageOutput, error) {
+	if err := validateReceiveMessageInput(input); err != nil {
+		return nil, err
+	}
+
 	receiveParams := &sqs.ReceiveMessageInput{
 		QueueUrl:            s.URL,
-		MaxNumberOfMessages: aws.Int64(s.Config.MaxNumberOfMessages),
-		VisibilityTimeout:   aws.Int64(s.Config.VisibilityTimeout),
-		WaitTimeSeconds:     aws.Int64(s.Config.WaitTimeSeconds),
+		MaxNumberOfMessages: aws.Int64(*input.MaxNumberOfMessages),
+		VisibilityTimeout:   aws.Int64(*input.VisibilityTimeout),
+		WaitTimeSeconds:     aws.Int64(*input.WaitTimeSeconds),
 	}
 	return s.Queue.ReceiveMessage(receiveParams)
 }
 
 // Send message to SQS
-func (s Client) SendMessage(body string, messageGroupId *string) error {
-	sendParams := &sqs.SendMessageInput{
-		MessageBody:  aws.String(body),
-		QueueUrl:     s.URL,
-		DelaySeconds: aws.Int64(s.Config.MessageVisibilityDelay),
+func (s Client) SendMessage(input SendMessageInput) error {
+	sendParams := sqs.SendMessageInput{
+		MessageBody: aws.String(input.Body),
+		QueueUrl:    s.URL,
 	}
 
-	if messageGroupId != nil {
-		sendParams.MessageGroupId = messageGroupId
+	if !s.IsFIFO {
+		sendParams.DelaySeconds = aws.Int64(input.DelaySeconds)
 	}
 
-	if _, err := s.Queue.SendMessage(sendParams); err != nil {
+	if input.MessageGroupId != nil {
+		sendParams.MessageGroupId = input.MessageGroupId
+	}
+
+	if _, err := s.Queue.SendMessage(&sendParams); err != nil {
 		return err
 	}
 
@@ -71,22 +74,18 @@ func (s Client) DeleteMessage(handle *string) error {
 	return nil
 }
 
-func validate(config Config) error {
+func validateReceiveMessageInput(input ReceiveMessageInput) error {
 	var missingParams []string
 
-	if config.MaxNumberOfMessages == 0 {
+	if input.MaxNumberOfMessages == nil {
 		missingParams = append(missingParams, "MaxNumberOfMessages")
 	}
 
-	if config.MessageVisibilityDelay == 0 {
-		missingParams = append(missingParams, "MessageVisibilityDelay")
-	}
-
-	if config.VisibilityTimeout == 0 {
+	if input.VisibilityTimeout == nil {
 		missingParams = append(missingParams, "VisibilityTimeout")
 	}
 
-	if config.WaitTimeSeconds == 0 {
+	if input.WaitTimeSeconds == nil {
 		missingParams = append(missingParams, "WaitTimeSeconds")
 	}
 
