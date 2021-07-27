@@ -5,6 +5,10 @@ import (
 	"net/http"
 )
 
+type HTTPClientInterface interface {
+	DoRequest(params Request) (*http.Response, error)
+}
+
 type HTTPClient struct {
 	Client *http.Client
 }
