@@ -21,7 +21,7 @@ func TestCError(t *testing.T) {
 		{
 			errType:          "Validation",
 			descriptionTrue:  "IsValidation Error",
-			descriptionFalse: "IsDuplicatedError and IsNotFoundError",
+			descriptionFalse: "IsDuplicatedError, IsNotFoundError, UnauthorizedError and ForbiddenError",
 			customError:      cerror.NewValidationError,
 			assertTrue: []func(error) bool{
 				cerror.IsValidationError,
@@ -29,12 +29,14 @@ func TestCError(t *testing.T) {
 			assertFalse: []func(error) bool{
 				cerror.IsDuplicatedError,
 				cerror.IsNotFoundError,
+				cerror.IsUnauthorizedError,
+				cerror.IsForbiddenError,
 			},
 		},
 		{
 			errType:          "Duplicated",
 			descriptionTrue:  "IsDuplicated Error",
-			descriptionFalse: "IsValidationError and IsNotFoundError",
+			descriptionFalse: "IsValidationError, IsNotFoundError, UnauthorizedError and ForbiddenError",
 			customError:      cerror.NewDuplicatedError,
 			assertTrue: []func(error) bool{
 				cerror.IsDuplicatedError,
@@ -42,12 +44,14 @@ func TestCError(t *testing.T) {
 			assertFalse: []func(error) bool{
 				cerror.IsValidationError,
 				cerror.IsNotFoundError,
+				cerror.IsUnauthorizedError,
+				cerror.IsForbiddenError,
 			},
 		},
 		{
 			errType:          "NotFound",
 			descriptionTrue:  "IsNotFound Error",
-			descriptionFalse: "IsDuplicatedError and IsValidationError",
+			descriptionFalse: "IsDuplicatedError, IsValidationError, UnauthorizedError and ForbiddenError",
 			customError:      cerror.NewNotFoundError,
 			assertTrue: []func(error) bool{
 				cerror.IsNotFoundError,
@@ -55,6 +59,38 @@ func TestCError(t *testing.T) {
 			assertFalse: []func(error) bool{
 				cerror.IsDuplicatedError,
 				cerror.IsValidationError,
+				cerror.IsUnauthorizedError,
+				cerror.IsForbiddenError,
+			},
+		},
+		{
+			errType:          "Unauthorized",
+			descriptionTrue:  "Unauthorized Error",
+			descriptionFalse: "IsDuplicatedError, IsValidationError, IsNotFoundError and ForbiddenError",
+			customError:      cerror.NewUnauthorizedError,
+			assertTrue: []func(error) bool{
+				cerror.IsUnauthorizedError,
+			},
+			assertFalse: []func(error) bool{
+				cerror.IsDuplicatedError,
+				cerror.IsValidationError,
+				cerror.IsNotFoundError,
+				cerror.IsForbiddenError,
+			},
+		},
+		{
+			errType:          "Forbidden",
+			descriptionTrue:  "IsForbidden Error",
+			descriptionFalse: "IsDuplicatedError, IsValidationError, IsNotFoundError and UnauthorizedError",
+			customError:      cerror.NewForbiddenError,
+			assertTrue: []func(error) bool{
+				cerror.IsForbiddenError,
+			},
+			assertFalse: []func(error) bool{
+				cerror.IsDuplicatedError,
+				cerror.IsValidationError,
+				cerror.IsNotFoundError,
+				cerror.IsUnauthorizedError,
 			},
 		},
 	}
