@@ -19,6 +19,16 @@ func NewNotFoundError(err error) error {
 	return customError{errorType: NotFoundError, originalError: err}
 }
 
+// Create a Unauthorized error
+func NewUnauthorizedError(err error) error {
+	return customError{errorType: UnauthorizedError, originalError: err}
+}
+
+// Create a Forbidden error
+func NewForbiddenError(err error) error {
+	return customError{errorType: ForbiddenError, originalError: err}
+}
+
 // Get error message from a custom error
 func (err customError) Error() string {
 	return err.originalError.Error()
@@ -46,6 +56,24 @@ func IsDuplicatedError(err error) bool {
 func IsNotFoundError(err error) bool {
 	if customErr, ok := errors.Cause(err).(customError); ok {
 		return customErr.errorType == NotFoundError
+	}
+
+	return false
+}
+
+// Check if given error has the "Unauthorized Error" type
+func IsUnauthorizedError(err error) bool {
+	if customErr, ok := errors.Cause(err).(customError); ok {
+		return customErr.errorType == UnauthorizedError
+	}
+
+	return false
+}
+
+// Check if given error has the "Forbidden Error" type
+func IsForbiddenError(err error) bool {
+	if customErr, ok := errors.Cause(err).(customError); ok {
+		return customErr.errorType == ForbiddenError
 	}
 
 	return false

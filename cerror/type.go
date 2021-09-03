@@ -7,6 +7,8 @@ const (
 	ValidationError
 	DuplicatedError
 	NotFoundError
+	UnauthorizedError
+	ForbiddenError
 )
 
 type customError struct {
