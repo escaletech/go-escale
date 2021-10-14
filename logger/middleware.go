@@ -87,7 +87,9 @@ func (h *middleware) suppressSensitiveQueryStrings(urlStr string) string {
 	values, _ := url.ParseQuery(u.RawQuery)
 
 	for _, field := range h.sensitiveFields {
-		values.Set(field, "")
+		if values.Get(field) != "" {
+			values.Set(field, "")
+		}
 	}
 
 	u.RawQuery = values.Encode()
