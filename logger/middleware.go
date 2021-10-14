@@ -3,6 +3,7 @@ package logger
 import (
 	"fmt"
 	"net/http"
+	"net/url"
 	"time"
 
 	"github.com/escaletech/go-escale/requestid"
@@ -10,10 +11,10 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func Middleware(env string) mux.MiddlewareFunc {
+func Middleware(env string, sensitiveFields []string) mux.MiddlewareFunc {
 	logger := New(env)
 	return func(next http.Handler) http.Handler {
-		return &middleware{next, logger}
+		return &middleware{next, logger, sensitiveFields}
 	}
 }
 
@@ -23,10 +24,11 @@ func (h *middleware) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	r = SetInRequest(r, log)
 
 	start := time.Now()
+	cleanURL := h.suppressSensitiveQueryStrings(r.RequestURI)
 
 	httpFields := logrus.Fields{
 		"method": r.Method,
-		"url":    r.URL.String(),
+		"url":    cleanURL,
 	}
 
 	fields := logrus.Fields{
@@ -38,7 +40,7 @@ func (h *middleware) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	h.next.ServeHTTP(lw, r)
 
 	latency := time.Since(start).Milliseconds()
-	message := fmt.Sprintf("%v %v | %vms | %v \"%v\"", r.Method, r.RequestURI, latency, lw.status, http.StatusText(lw.status))
+	message := fmt.Sprintf("%v %v | %vms | %v \"%v\" | Source %v", r.Method, cleanURL, latency, lw.status, http.StatusText(lw.status), r.RemoteAddr)
 
 	fields["duration"] = latency
 	httpFields["status_code"] = lw.status
@@ -78,4 +80,16 @@ func (lrw *loggerReponseWriter) Write(body []byte) (int, error) {
 func (lrw *loggerReponseWriter) WriteHeader(code int) {
 	lrw.status = code
 	lrw.ResponseWriter.WriteHeader(code)
+}
+
+func (h *middleware) suppressSensitiveQueryStrings(urlStr string) string {
+	u, _ := url.Parse(urlStr)
+	values, _ := url.ParseQuery(u.RawQuery)
+
+	for _, field := range h.sensitiveFields {
+		values.Set(field, "")
+	}
+
+	u.RawQuery = values.Encode()
+	return u.String()
 }

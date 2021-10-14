@@ -7,8 +7,9 @@ import (
 )
 
 type middleware struct {
-	next   http.Handler
-	logger *logrus.Logger
+	next            http.Handler
+	logger          *logrus.Logger
+	sensitiveFields []string
 }
 
 type loggerReponseWriter struct {
