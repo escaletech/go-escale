@@ -40,7 +40,7 @@ func (h *middleware) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	h.next.ServeHTTP(lw, r)
 
 	latency := time.Since(start).Milliseconds()
-	message := fmt.Sprintf("%v %v | %vms | %v \"%v\" | Source %v", r.Method, cleanURL, latency, lw.status, http.StatusText(lw.status), r.RemoteAddr)
+	message := fmt.Sprintf("%v %v | %vms | %v \"%v\"", r.Method, cleanURL, latency, lw.status, http.StatusText(lw.status))
 
 	fields["duration"] = latency
 	httpFields["status_code"] = lw.status
@@ -88,7 +88,7 @@ func (h *middleware) suppressSensitiveQueryStrings(urlStr string) string {
 
 	for _, field := range h.sensitiveFields {
 		if values.Get(field) != "" {
-			values.Set(field, "")
+			values.Set(field, "xxx")
 		}
 	}
 
