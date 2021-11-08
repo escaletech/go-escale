@@ -35,4 +35,6 @@ go get github.com/escaletech/go-escale
 
 [slicer](./docs/slicer.md)
 
+[sns](./docs/sns.md)
+
 [sqs](./docs/sqs.md)
