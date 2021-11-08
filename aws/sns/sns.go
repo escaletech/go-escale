@@ -4,16 +4,16 @@ import (
 	"strings"
 
 	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/sns"
-	"github.com/aws/aws-sdk-go/service/sns/snsiface"
 	"github.com/escaletech/go-escale/messages"
 
 	"github.com/pkg/errors"
 )
 
 // Create a SNS Client and test its connection
-func New(snc snsiface.SNSAPI, topicsArn []string) (*Client, error) {
-	c := Client{snc}
+func New(awsSession *session.Session, topicsArn []string) (*Client, error) {
+	c := Client{sns.New(awsSession)}
 
 	if err := c.testConnection(topicsArn); err != nil {
 		return nil, err
