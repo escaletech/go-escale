@@ -38,3 +38,5 @@ go get github.com/escaletech/go-escale
 [sns](./docs/sns.md)
 
 [sqs](./docs/sqs.md)
+
+[stringer](./docs/stringer.md)
