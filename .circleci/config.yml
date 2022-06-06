@@ -28,7 +28,7 @@ jobs:
       - checkout
       - attach_workspace:
           at: .
-      - sq/scanner
+      #- sq/scanner
 
 production_only: &production_only
   filters:
