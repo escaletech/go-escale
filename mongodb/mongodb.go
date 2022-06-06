@@ -26,7 +26,7 @@ func GetDatabase(mongoURL string) (*mongo.Database, error) {
 	return client.Database(cs.Database), nil
 }
 
-func EnsureIndex(collection *mongo.Collection, indexName string, keys bson.M, unique bool) error {
+func EnsureIndex(collection *mongo.Collection, indexName string, keys interface{}, unique bool) error {
 	if indexExists(collection, indexName) {
 		return nil
 	}
