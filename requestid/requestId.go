@@ -20,8 +20,7 @@ func Handler(next http.Handler) http.Handler {
 func set(r *http.Request) *http.Request {
 	current := r.Header.Get(requestIDHeader)
 	if current == "" {
-		id, _ := uuid.NewRandom()
-		current = id.String()
+		current = GenerateTrackingId()
 	}
 
 	return r.WithContext(context.WithValue(r.Context(), requestIDKey{}, current))
@@ -29,4 +28,9 @@ func set(r *http.Request) *http.Request {
 
 func Get(r *http.Request) string {
 	return r.Context().Value(requestIDKey{}).(string)
+}
+
+func GenerateTrackingId() string {
+	id, _ := uuid.NewRandom()
+	return id.String()
 }
