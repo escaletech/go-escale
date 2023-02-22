@@ -29,19 +29,19 @@ func NewRequestLogger(w http.ResponseWriter, log *logger.Logger) *RequestLogger 
 }
 
 func (rl *RequestLogger) WriteRequestLog(r *http.Request) {
-	ip, _ := getIP(r)
+	ip, _ := rl.getIP(r)
 
 	msg := fmt.Sprintf(
 		"[ip:%v] [iss:%v] %v %v - %v duration: %vms",
 		ip,
-		getHost(r),
+		r.Host,
 		r.Method,
 		r.URL.Path,
 		rl.ResponseWriter.status,
 		time.Since(rl.start).Milliseconds(),
 	)
 
-	rl.logger.Info(msg)
+	rl.logger.Access(msg)
 
 	requestInfo := rl.getRequestInfo(r)
 	msgLogInfoRequest := fmt.Sprintf(
@@ -66,11 +66,7 @@ func (rl *RequestLogger) WriteRequestLog(r *http.Request) {
 	}
 }
 
-func getHost(r *http.Request) string {
-	return r.Host
-}
-
-func getIP(r *http.Request) (string, error) {
+func (rl *RequestLogger) getIP(r *http.Request) (string, error) {
 	ips := r.Header.Get("X-Forwarded-For")
 	splitIps := strings.Split(ips, ",")
 

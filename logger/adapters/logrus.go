@@ -23,8 +23,11 @@ var levelLog = map[logger.Level]logrus.Level{
 	logger.FATAL: logrus.FatalLevel,
 }
 
+const FILE_ACCESS_LOG string = "access_log"
+
 type logrusAdapter struct {
-	log *logrus.Logger
+	log          *logrus.Logger
+	accessOutput *os.File
 }
 
 func NewLogrusAdapter(env string, level logger.Level) logger.Adapter {
@@ -37,8 +40,14 @@ func NewLogrusAdapter(env string, level logger.Level) logger.Adapter {
 	log.SetFormatter(formatter)
 	log.SetLevel(levelLog[level])
 
+	accessLogFile, err := os.OpenFile(FILE_ACCESS_LOG, os.O_APPEND|os.O_CREATE, 0600)
+	if err != nil {
+		log.Error("Failed to open file " + FILE_ACCESS_LOG + "message: " + err.Error())
+	}
+
 	return &logrusAdapter{
-		log: log,
+		log:          log,
+		accessOutput: accessLogFile,
 	}
 }
 
@@ -69,4 +78,9 @@ func (la *logrusAdapter) Debug(msg string) {
 func (la *logrusAdapter) Fatal(msg string) {
 	la.log.SetOutput(os.Stderr)
 	la.log.Fatal(msg)
+}
+
+func (la *logrusAdapter) Access(msg string) {
+	la.log.SetOutput(la.accessOutput)
+	la.log.Info(msg)
 }
