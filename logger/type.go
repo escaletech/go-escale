@@ -20,7 +20,6 @@ type Adapter interface {
 	Info(msg string)
 	Debug(msg string)
 	Fatal(msg string)
-	Access(msg string)
 	Deprecated() *logrus.Logger
 }
 

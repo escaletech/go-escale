@@ -45,10 +45,6 @@ func (l *Logger) prepareMessage(msg string) string {
 	return fmt.Sprintf("%v [trackingId: %v]", msg, l.ctx.Value(keyTrackingId))
 }
 
-func (l *Logger) Access(msg string) {
-	l.adapter.Access(l.prepareMessage(msg))
-}
-
 func (l *Logger) SetTrackingId(trackingId string) {
 	l.ctx = context.WithValue(l.ctx, keyTrackingId, trackingId)
 }

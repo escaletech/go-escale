@@ -41,7 +41,7 @@ func (rl *RequestLogger) WriteRequestLog(r *http.Request) {
 		time.Since(rl.start).Milliseconds(),
 	)
 
-	rl.logger.Access(msg)
+	rl.logger.Info(msg)
 
 	requestInfo := rl.getRequestInfo(r)
 	msgLogInfoRequest := fmt.Sprintf(
@@ -62,7 +62,6 @@ func (rl *RequestLogger) WriteRequestLog(r *http.Request) {
 
 	if rl.ResponseWriter.status < http.StatusInternalServerError {
 		rl.logger.Warn(msgLogInfoRequest)
-		return
 	}
 }
 
@@ -83,15 +82,15 @@ func (rl *RequestLogger) getIP(r *http.Request) (string, error) {
 	}
 
 	netIP := net.ParseIP(ip)
-	if netIP != nil {
-		ip := netIP.String()
-		if ip == "::1" {
-			return "127.0.0.1", nil
-		}
-		return ip, nil
+	if netIP == nil {
+		return "", errors.New("IP not found")
 	}
 
-	return "", errors.New("IP not found")
+	ip = netIP.String()
+	if ip == "::1" {
+		return "127.0.0.1", nil
+	}
+	return ip, nil
 }
 
 func (rl *RequestLogger) getRequestInfo(r *http.Request) logger.Fields {
