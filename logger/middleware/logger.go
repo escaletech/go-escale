@@ -1,4 +1,4 @@
-package accesslog
+package middleware
 
 import (
 	"errors"
