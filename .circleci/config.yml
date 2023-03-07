@@ -37,7 +37,7 @@ production_only: &production_only
 
 ci_only: &ci_only
   filters:
-    branches: { ignore: [main] }
+    branches: { ignore: /.*/  }
     tags: { ignore: /.*/ }
 
 workflows:
