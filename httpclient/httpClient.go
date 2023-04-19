@@ -17,14 +17,18 @@ func init() {
 	Client = &http.Client{}
 }
 
-// Create a new HTTPClient
 func New() *HTTPClient {
 	return &HTTPClient{
 		Client: Client,
 	}
 }
 
-// Make a HTTP request using default http.Client.Do function
+// Define a configuração do certificado TLS
+func (h *HTTPClient) SetTLSConfig(config *tls.Config) {
+	h.tlsConfig = config
+}
+
+// Faça uma solicitação HTTP usando a função padrão http.Client.Do
 func (h *HTTPClient) DoRequest(params Request) (*http.Response, error) {
 	if err := validate(params); err != nil {
 		return nil, err
@@ -45,10 +49,16 @@ func (h *HTTPClient) configClient(requestConfig Config) {
 		Client.Timeout = time.Duration(requestConfig.TimeoutInSeconds) * time.Second
 	}
 
-	Client.Transport = &http.Transport{
+	transport := &http.Transport{
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: requestConfig.InsecureSkipVerify},
 	}
 
+	// adiciona a configuração do certificado TLS ao transporte, se definida
+	if h.tlsConfig != nil {
+		transport.TLSClientConfig = h.tlsConfig
+	}
+
+	h.Client.Transport = transport
 	h.Client = Client
 }
 
