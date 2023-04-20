@@ -1,6 +1,7 @@
 package httpclient
 
 import (
+	"crypto/tls"
 	"io"
 	"net/http"
 )
@@ -10,12 +11,14 @@ type HTTPClientInterface interface {
 }
 
 type HTTPClient struct {
-	Client *http.Client
+	Client    *http.Client
+	tlsConfig *tls.Config // novo campo para armazenar a configuração do certificado
 }
 
 type Config struct {
 	TimeoutInSeconds   int
 	InsecureSkipVerify bool
+	Certificates       []tls.Certificate
 }
 
 type Request struct {
