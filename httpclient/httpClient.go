@@ -34,7 +34,12 @@ func (h *HTTPClient) DoRequest(params Request) (*http.Response, error) {
 		return nil, err
 	}
 
-	req, err := http.NewRequest(params.Method, params.URL, params.Body)
+	url := params.URL
+	if params.PathParams != nil {
+		url += castPathParamsToString(params.PathParams)
+	}
+
+	req, err := http.NewRequest(params.Method, url, params.Body)
 	if err != nil {
 		return nil, err
 	}
@@ -89,4 +94,20 @@ func validate(params Request) error {
 	}
 
 	return nil
+}
+
+func castPathParamsToString(pathParams map[string]string) string {
+	if pathParams == nil {
+		return ""
+	}
+	b := strings.Builder{}
+	b.WriteString("?")
+	for key, value := range pathParams {
+		b.WriteString(key)
+		b.WriteString("=")
+		b.WriteString(value)
+		b.WriteString("&")
+	}
+	l := b.Len()
+	return b.String()[:l-1]
 }
