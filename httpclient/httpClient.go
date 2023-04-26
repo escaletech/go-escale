@@ -35,8 +35,8 @@ func (h *HTTPClient) DoRequest(params Request) (*http.Response, error) {
 	}
 
 	url := params.URL
-	if params.PathParams != nil {
-		url += castPathParamsToString(params.PathParams)
+	if params.QueryParams != nil {
+		url += castQueryParamsToString(params.QueryParams)
 	}
 
 	req, err := http.NewRequest(params.Method, url, params.Body)
@@ -96,7 +96,7 @@ func validate(params Request) error {
 	return nil
 }
 
-func castPathParamsToString(pathParams map[string]string) string {
+func castQueryParamsToString(pathParams map[string]string) string {
 	if pathParams == nil {
 		return ""
 	}

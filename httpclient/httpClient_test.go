@@ -2,7 +2,7 @@ package httpclient
 
 import "testing"
 
-func Test_castPathParamsToString(t *testing.T) {
+func Test_castQueryParamsToString(t *testing.T) {
 	type args struct {
 		pathParams map[string]string
 	}
@@ -47,8 +47,8 @@ func Test_castPathParamsToString(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := castPathParamsToString(tt.args.pathParams); got != tt.want {
-				t.Errorf("castPathParamsToString() = %v, want %v", got, tt.want)
+			if got := castQueryParamsToString(tt.args.pathParams); got != tt.want {
+				t.Errorf("castQueryParamsToString() = %v, want %v", got, tt.want)
 			}
 		})
 	}

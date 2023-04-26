@@ -22,10 +22,10 @@ type Config struct {
 }
 
 type Request struct {
-	Method     string
-	URL        string
-	Headers    map[string]string
-	Body       io.Reader
-	Config     Config
-	PathParams map[string]string
+	Method      string
+	URL         string
+	Headers     map[string]string
+	Body        io.Reader
+	Config      Config
+	QueryParams map[string]string
 }
