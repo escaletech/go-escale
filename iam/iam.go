@@ -41,7 +41,20 @@ func (i *IAM) RegisterApplicationFromRoutes(applicationName, applicationTitle st
 }
 
 func (i *IAM) doRegistration(application *IamApplication) error {
+	err := i.updateRules(application)
+	if err != nil {
+		return err
+	}
 
+	err = i.updateRulesRegistration(application)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (i *IAM) updateRules(application *IamApplication) error {
 	headers := map[string]string{
 		"Authorization": "Basic " + i.token,
 	}
@@ -57,6 +70,36 @@ func (i *IAM) doRegistration(application *IamApplication) error {
 			TimeoutInSeconds: i.timeoutInSeconds,
 		},
 	})
+
+	if err != nil {
+		return err
+	}
+
+	if resp.StatusCode == http.StatusOK {
+		return nil
+	}
+
+	respBody, _ := io.ReadAll(resp.Body)
+	return errors.New(string(respBody))
+}
+
+func (i *IAM) updateRulesRegistration(application *IamApplication) error {
+	headers := map[string]string{
+		"Authorization": "Basic " + i.token,
+	}
+
+	body, _ := json.Marshal(application)
+
+	resp, err := i.HTTPClient.DoRequest(httpclient.Request{
+		Method:  "PUT",
+		URL:     i.URL + "/roles/" + application.ID + "/rules",
+		Headers: headers,
+		Body:    bytes.NewBuffer(body),
+		Config: httpclient.Config{
+			TimeoutInSeconds: i.timeoutInSeconds,
+		},
+	})
+
 	if err != nil {
 		return err
 	}
