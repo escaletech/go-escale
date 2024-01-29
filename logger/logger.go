@@ -1,31 +1,54 @@
 package logger
 
 import (
-	"io/ioutil"
+	"context"
+	"fmt"
 
 	"github.com/sirupsen/logrus"
 )
 
-var dataDogFormatter = &logrus.JSONFormatter{
-	FieldMap: logrus.FieldMap{
-		logrus.FieldKeyTime:  "timestamp",
-		logrus.FieldKeyLevel: "level",
-		logrus.FieldKeyMsg:   "message",
-	},
+type keyContext string
+
+const (
+	keyTrackingId keyContext = "trackingId"
+)
+
+func NewLogger(adp Adapter, ctx context.Context) *Logger {
+	return &Logger{adapter: adp, ctx: ctx}
 }
 
-func New(env string) *logrus.Logger {
-	var formatter logrus.Formatter = new(logrus.TextFormatter)
-	if env != "dev" {
-		formatter = dataDogFormatter
-	}
+func (l *Logger) HandleError(err error) {
+	l.adapter.Error(l.prepareMessage(err.Error()))
+}
 
-	logger := logrus.New()
-	logger.SetFormatter(formatter)
+func (l *Logger) Error(msg string) {
+	l.adapter.Error(l.prepareMessage(msg))
+}
 
-	if env == "test" {
-		logger.Out = ioutil.Discard
-	}
+func (l *Logger) Warn(msg string) {
+	l.adapter.Warn(l.prepareMessage(msg))
+}
 
-	return logger
+func (l *Logger) Info(msg string) {
+	l.adapter.Info(l.prepareMessage(msg))
+}
+
+func (l *Logger) Fatal(msg string) {
+	l.adapter.Fatal(l.prepareMessage(msg))
+}
+
+func (l *Logger) Debug(msg string) {
+	l.adapter.Debug(l.prepareMessage(msg))
+}
+
+func (l *Logger) prepareMessage(msg string) string {
+	return fmt.Sprintf("%v [trackingId: %v]", msg, l.ctx.Value(keyTrackingId))
+}
+
+func (l *Logger) SetTrackingId(trackingId string) {
+	l.ctx = context.WithValue(l.ctx, keyTrackingId, trackingId)
+}
+
+func (l *Logger) Deprecated() *logrus.Logger {
+	return l.adapter.Deprecated()
 }

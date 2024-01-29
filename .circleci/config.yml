@@ -1,7 +1,6 @@
 version: 2.1
 
 orbs:
-  sq: escaletech/sonarqube@0.2
   gh-release: escaletech/gh-conventional-release@0.1.9
 
 jobs:
@@ -21,14 +20,6 @@ jobs:
       - persist_to_workspace:
           root: .
           paths: [coverage]
-  sonar:
-    docker:
-      - image: cimg/go:1.16
-    steps:
-      - checkout
-      - attach_workspace:
-          at: .
-      #- sq/scanner
 
 production_only: &production_only
   filters:
@@ -45,10 +36,6 @@ workflows:
   ci:
     jobs:
       - build-and-test:
-          <<: *ci_only
-      - sonar:
-          context: sonarqube
-          requires: [build-and-test]
           <<: *ci_only
   production:
     jobs:
