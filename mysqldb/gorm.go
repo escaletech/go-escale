@@ -20,7 +20,7 @@ func GormConnect(params GormConnParams) *gorm.DB {
 	})
 
 	if err != nil {
-		params.Log.Errorf(messages.DBConnectionError(params.ConnectionParams.Identifier, err))
+		params.Log.Error(messages.DBConnectionError(params.ConnectionParams.Identifier, err))
 	}
 
 	sqlDB, _ := db.DB()
