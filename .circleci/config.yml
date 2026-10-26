@@ -7,7 +7,7 @@ orbs:
 jobs:
   build-and-test:
     docker:
-      - image: cimg/go:1.16
+      - image: cimg/go:1.26
     steps:
       - checkout
       - restore_cache:
@@ -23,7 +23,7 @@ jobs:
           paths: [coverage]
   sonar:
     docker:
-      - image: cimg/go:1.16
+      - image: cimg/go:1.26
     steps:
       - checkout
       - attach_workspace:
